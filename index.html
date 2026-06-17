@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 - Portfolio</title>
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --surface: #111827;
+            --surface-hover: #1a2332;
+            --primary: #00d4ff;
+            --primary-dim: rgba(0, 212, 255, 0.12);
+            --accent: #7c3aed;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(148, 163, 184, 0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 20%, rgba(0, 212, 255, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 70%, rgba(124, 58, 237, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 网格背景 */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 820px;
+        }
+
+        /* ===== 头部卡片 ===== */
+        .hero-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 48px 44px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+        }
+
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -60px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            pointer-events: none;
+        }
+
+        .avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .avatar::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, var(--primary), var(--accent)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+
+        .name-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+
+        .name-title h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .name-title .role {
+            font-size: 15px;
+            color: var(--primary);
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* 标签 */
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .tag {
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: var(--primary-dim);
+            color: var(--primary);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .tag.accent {
+            background: rgba(124, 58, 237, 0.12);
+            color: #a78bfa;
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        /* 简介 */
+        .bio {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        .bio strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ===== 底部双栏 ===== */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            .hero-card {
+                padding: 32px 24px;
+            }
+            .avatar-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* ===== 信息卡片通用 ===== */
+        .info-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-header .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .icon-contact {
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--primary);
+        }
+
+        .icon-qr {
+            background: rgba(124, 58, 237, 0.12);
+            color: #a78bfa;
+        }
+
+        /* 联系方式列表 */
+        .contact-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .contact-list .ci-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--surface-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .contact-list .ci-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+        }
+
+        .contact-list .ci-value {
+            color: var(--text);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a.ci-value:hover {
+            color: var(--primary);
+        }
+
+        /* ===== 二维码区域 ===== */
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .qr-code {
+            width: 140px;
+            height: 140px;
+            background: #fff;
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .qr-code svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .qr-hint {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .qr-hint span {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: rgba(148, 163, 184, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== 打字光标动画 ===== */
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--primary);
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ========== 头部：自我介绍 ========== -->
+        <section class="hero-card">
+            <div class="avatar-row">
+                <!-- 头像首字母占位 — 替换为你的名字 -->
+                <div class="avatar">黄</div>
+                <div class="name-title">
+                    <h1>Hi，我是 <span class="highlight">黄鸡鸡</span></h1>
+                    <div class="role">Pokémon Trainer</div>
+                </div>
+            </div>
+
+            <!-- 技术栈标签 -->
+            <div class="tag-list">
+                <span class="tag">Elite Four</span>
+                <span class="tag accent">Pokémon Breeder</span>
+                <span class="tag">Gym Leader</span>
+            </div>
+
+            <!-- 自我介绍 -->
+            <p class="bio">
+                捕捉、训练、照料宝可梦并参与对战的人，挑战主角、道馆馆主、四天王等所有持有宝可梦的人，
+                核心系列中常特指挑战道馆徽章、冲击宝可梦联盟的训练师。
+            </p>
+        </section>
+
+        <!-- ========== 底部双栏：联系方式 + 二维码 ========== -->
+        <div class="grid-2col">
+
+            <!-- 联系方式 -->
+            <article class="info-card">
+                <div class="card-header">
+                    <div class="icon icon-contact">✉</div>
+                    联系方式
+                </div>
+                <ul class="contact-list">
+                    <li>
+                        <div class="ci-icon">📧</div>
+                        <div>
+                            <div class="ci-label">Email</div>
+                            <a class="ci-value" href="mailto:2111835287@qq.com">2111835287@qq.com</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="ci-icon">📱</div>
+                        <div>
+                            <div class="ci-label">电话</div>
+                            <span class="ci-value">18377788821</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="ci-icon">🐙</div>
+                        <div>
+                            <div class="ci-label">GitHub</div>
+                            <a class="ci-value" href="http://9178qwe.com" target="_blank" rel="noopener">9178qwe.com</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="ci-icon">💼</div>
+                        <div>
+                            <div class="ci-label">位置</div>
+                            <span class="ci-value">中国 · 江西</span>
+                        </div>
+                    </li>
+                </ul>
+            </article>
+
+            <!-- 二维码区域 -->
+            <article class="info-card">
+                <div class="card-header">
+                    <div class="icon icon-qr">▦</div>
+                    扫码添加微信
+                </div>
+                <div class="qr-section">
+                    <!-- 内联 QR Code SVG（指向本页地址） -->
+                    <div class="qr-code" id="qrcode">
+                        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 手动生成的简化 QR 风格占位 — 替换为真实二维码图片 -->
+                            <rect width="120" height="120" fill="#ffffff" rx="4"/>
+                            <!-- 定位图案 -->
+                            <rect x="6" y="6" width="28" height="28" fill="none" stroke="#0a0e17" stroke-width="6"/>
+                            <rect x="14" y="14" width="12" height="12" fill="#0a0e17"/>
+                            <rect x="86" y="6" width="28" height="28" fill="none" stroke="#0a0e17" stroke-width="6"/>
+                            <rect x="94" y="14" width="12" height="12" fill="#0a0e17"/>
+                            <rect x="6" y="86" width="28" height="28" fill="none" stroke="#0a0e17" stroke-width="6"/>
+                            <rect x="14" y="94" width="12" height="12" fill="#0a0e17"/>
+                            <!-- 数据模块 -->
+                            <g fill="#0a0e17" opacity="0.85">
+                                <rect x="44" y="10" width="6" height="6"/><rect x="54" y="10" width="6" height="6"/>
+                                <rect x="64" y="10" width="6" height="6"/><rect x="38" y="20" width="6" height="6"/>
+                                <rect x="48" y="20" width="6" height="6"/><rect x="60" y="20" width="6" height="6"/>
+                                <rect x="70" y="20" width="6" height="6"/><rect x="44" y="30" width="6" height="6"/>
+                                <rect x="56" y="30" width="6" height="6"/><rect x="66" y="30" width="6" height="6"/>
+                                <rect x="74" y="30" width="6" height="6"/><rect x="10" y="44" width="6" height="6"/>
+                                <rect x="22" y="44" width="6" height="6"/><rect x="48" y="44" width="6" height="6"/>
+                                <rect x="58" y="44" width="6" height="6"/><rect x="84" y="44" width="6" height="6"/>
+                                <rect x="94" y="44" width="6" height="6"/><rect x="10" y="54" width="6" height="6"/>
+                                <rect x="32" y="54" width="6" height="6"/><rect x="42" y="54" width="6" height="6"/>
+                                <rect x="62" y="54" width="6" height="6"/><rect x="80" y="54" width="6" height="6"/>
+                                <rect x="104" y="54" width="6" height="6"/><rect x="16" y="64" width="6" height="6"/>
+                                <rect x="36" y="64" width="6" height="6"/><rect x="46" y="64" width="6" height="6"/>
+                                <rect x="64" y="64" width="6" height="6"/><rect x="92" y="64" width="6" height="6"/>
+                                <rect x="104" y="64" width="6" height="6"/><rect x="22" y="74" width="6" height="6"/>
+                                <rect x="52" y="74" width="6" height="6"/><rect x="72" y="74" width="6" height="6"/>
+                                <rect x="88" y="74" width="6" height="6"/><rect x="100" y="74" width="6" height="6"/>
+                                <rect x="44" y="84" width="6" height="6"/><rect x="74" y="84" width="6" height="6"/>
+                                <rect x="84" y="84" width="6" height="6"/><rect x="44" y="94" width="6" height="6"/>
+                                <rect x="54" y="94" width="6" height="6"/><rect x="64" y="94" width="6" height="6"/>
+                                <rect x="44" y="104" width="6" height="6"/><rect x="56" y="104" width="6" height="6"/>
+                                <rect x="66" y="104" width="6" height="6"/><rect x="74" y="104" width="6" height="6"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="qr-hint">
+                        微信扫一扫<br>
+                        <span>即刻连接</span>
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <p class="footer">© 2026 — Built with ❤️ & vanilla HTML/CSS</p>
+    </div>
+</body>
+</html>
